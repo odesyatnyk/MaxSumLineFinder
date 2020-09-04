@@ -108,7 +108,7 @@ namespace MaxSumLineFinder.ApplicationLogic
                 throw new ArgumentException($"{nameof(path)} contains invalid path characters");
 
             if (!File.Exists(path))
-                throw new ArgumentException($"File {Path.GetFileName(path)} does not exists by the provided path {path} or you do not have permissions to access it.");
+                throw new ArgumentException($"File \"{Path.GetFileName(path)}\" does not exists by the provided path {path} or you do not have permissions to access it.");
 
             int lineNumber = 1;
             return File.ReadAllLines(path).ToDictionary(_ => lineNumber++, y => y);
