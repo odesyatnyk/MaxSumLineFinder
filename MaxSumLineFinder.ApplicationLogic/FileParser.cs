@@ -54,7 +54,7 @@ namespace MaxSumLineFinder.ApplicationLogic
         /// </returns>
         public IEnumerable<int> GetInvalidLinesNumbers(Dictionary<int, string> lines)
         {
-            return lines.Where(x => LineInvalid(x.Value)).Select(x => x.Key).AsEnumerable();
+            return lines.Where(x => !string.IsNullOrWhiteSpace(x.Value) && LineInvalid(x.Value)).Select(x => x.Key).ToList().AsEnumerable();
         }
 
         /// <summary>
@@ -70,21 +70,24 @@ namespace MaxSumLineFinder.ApplicationLogic
         /// </returns>
         public IEnumerable<int> GetMaxSumLinesNumbers(Dictionary<int, string> lines, IEnumerable<int> exceptLines = null)
         {
-            var linesWithSum = lines.Where(x => !exceptLines.Contains(x.Key) && !LineInvalid(x.Value))
+            exceptLines = exceptLines ?? new List<int>();
+
+            var linesWithSum = lines.Where(x => !string.IsNullOrWhiteSpace(x.Value?.Trim()) && !exceptLines.Contains(x.Key) && !LineInvalid(x.Value))
                 .ToDictionary(
                     line => line.Key,
                     line => line.Value.Split(FileParser.NumberSeparator, StringSplitOptions.RemoveEmptyEntries)
-                                      .Aggregate(0M, (current, next) => current + decimal.Parse(next, NumberStyles.Any, FileParser.NumberFormat)));
+                                      .Aggregate(decimal.Zero, (current, next) => current + decimal.Parse(next, NumberStyles.Any, FileParser.NumberFormat)));
 
             if (!linesWithSum.Any())
                 return new List<int>().AsEnumerable();
 
             var maxSum = linesWithSum.Max(x => x.Value);
-            return linesWithSum.Where(line => line.Value == maxSum).Select(x => x.Key).AsEnumerable();
+            return linesWithSum.Where(line => line.Value == maxSum).Select(x => x.Key).ToList().AsEnumerable();
         }
 
         /// <summary>
         /// Checks if input <see cref="string"/> <paramref name="line"/> is a valid line to parse and calculate sum.
+        /// <list>Lines that contains numbers that are exceeding <see cref="decimal.MinValue"/> or <see cref="decimal.MaxValue"/> will be considered as invalid</list>
         /// <list>As numbers separator used <see cref="FileParser.NumberSeparator"/></list>
         /// <list>As numbers format used <see cref="IFormatProvider"/> <see cref="FileParser.NumberFormat"/></list>
         /// <list>As numbers styles used <see cref="NumberStyles.Any"/></list>
@@ -135,7 +138,7 @@ namespace MaxSumLineFinder.ApplicationLogic
             if (fileInfo is null)
                 return false;
 
-            return valid && Path.IsPathRooted(path) && !Path.GetInvalidPathChars().Any(x => path.ToCharArray().Contains(x));
+            return valid && Path.IsPathRooted(path) && !Path.GetInvalidPathChars().Any(x => path.ToCharArray().Contains(x)) && !Path.GetInvalidFileNameChars().Any(x => Path.GetFileName(path).ToCharArray().Contains(x));
         }
     }
 }
