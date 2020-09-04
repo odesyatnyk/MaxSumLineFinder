@@ -17,4 +17,19 @@
     <ProjectReference Include="..\MaxSumLineFinder.ApplicationLogic\MaxSumLineFinder.ApplicationLogic.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Assets\MixedLines.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\AllLinesInvalid.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\AllLinesValid.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\EmptyFile.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
