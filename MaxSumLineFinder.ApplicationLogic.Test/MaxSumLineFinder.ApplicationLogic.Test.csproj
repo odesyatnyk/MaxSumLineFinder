@@ -18,6 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Assets\Comma.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\MixedLines.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

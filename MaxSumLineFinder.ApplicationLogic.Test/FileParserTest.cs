@@ -22,6 +22,7 @@ namespace MaxSumLineFinder.ApplicationLogic.Test
         string emptyFileName = null;
         string mixedLinesFileName = null;
         string notExistingFileName = null;
+        string specificCommaFile = null;
 
         #endregion
 
@@ -35,6 +36,7 @@ namespace MaxSumLineFinder.ApplicationLogic.Test
             emptyFileName = "EmptyFile.txt";
             mixedLinesFileName = "MixedLines.txt";
             notExistingFileName = "IAmNothing.txt";
+            specificCommaFile = "Comma.txt";
         }
 
         [TestCleanup]
@@ -47,6 +49,7 @@ namespace MaxSumLineFinder.ApplicationLogic.Test
             emptyFileName = null;
             mixedLinesFileName = null;
             notExistingFileName = null;
+            specificCommaFile = null;
         }
 
         #endregion
@@ -84,6 +87,19 @@ namespace MaxSumLineFinder.ApplicationLogic.Test
             Assert.IsTrue(result.AnyValidLine);
             Assert.IsFalse(result.AnyInvalidLine);
             Assert.IsTrue(new[] { 4 }.SequenceEqual(result.LinesWithMaxSum));
+        }
+
+        [TestMethod]
+        public void Parse_SpecificCommaFile_CommaLineIsInvalidEmptyLineIsValidLineWithNumbersIsMax()
+        {
+            string path = GetFilePath(specificCommaFile);
+
+            var result = parser.Parse(path);
+
+            Assert.IsTrue(result.AnyValidLine);
+            Assert.IsTrue(result.AnyInvalidLine);
+            Assert.IsTrue(new[] { 4 }.SequenceEqual(result.LinesWithMaxSum));
+            Assert.IsTrue(new[] { 1 }.SequenceEqual(result.InvalidLines));
         }
 
         [TestMethod]
@@ -359,6 +375,21 @@ namespace MaxSumLineFinder.ApplicationLogic.Test
 
             var exclude = new List<int>() { 5 };
             var result = parser.GetMaxSumLinesNumbers(input, exclude);
+
+            Assert.IsTrue(result.Any());
+            Assert.AreEqual(2, result.Single());
+        }
+
+        [TestMethod]
+        public void GetMaxSumLinesNumbersMethod_ContainsLineOfCommasAndValidLine_ScalarResult ()
+        {
+            var input = new Dictionary<int, string>()
+            {
+                {1, ",,,,,,,,,,,,,,,,," },
+                {2, "-2" }
+            };
+
+            var result = parser.GetMaxSumLinesNumbers(input);
 
             Assert.IsTrue(result.Any());
             Assert.AreEqual(2, result.Single());
