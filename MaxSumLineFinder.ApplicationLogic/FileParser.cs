@@ -96,7 +96,12 @@ namespace MaxSumLineFinder.ApplicationLogic
         /// <returns>false in case described above conditions are not satisfied at least once otherwise true</returns>
         public bool LineInvalid(string line)
         {
-            return line.Split(FileParser.NumberSeparator, StringSplitOptions.RemoveEmptyEntries).Any(x => !decimal.TryParse(x, NumberStyles.Any, FileParser.NumberFormat, out var result));
+            var entries = line.Split(FileParser.NumberSeparator, StringSplitOptions.RemoveEmptyEntries);
+
+            if (!entries.Any() && !string.IsNullOrWhiteSpace(line))
+                return true;
+            
+            return entries.Any(x => string.IsNullOrWhiteSpace(x) || !decimal.TryParse(x, NumberStyles.Any, FileParser.NumberFormat, out var result));
         }
 
         /// <summary>
